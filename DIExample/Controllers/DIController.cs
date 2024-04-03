@@ -118,7 +118,7 @@ namespace DIExample.Controllers
         [HttpGet(nameof(MultipleCtor))]
         public IActionResult MultipleCtor()
         {
-            return Ok($"{_multipleCtorService.Value()}, {_multipleCtorService1.Invoke().Value()}, {_multipleCtorService2.Invoke("par2").Value()}, {_multipleCtorService3.Invoke("par3","par3").Value()}");
+            return Ok($"default: {_multipleCtorService.Value()}, key m1: {HttpContext.RequestServices.GetRequiredKeyedService<IMultipleCtorService>("m1").Value()}, key m3: {HttpContext.RequestServices.GetRequiredKeyedService<IMultipleCtorService>("m3").Value()}, func1: {_multipleCtorService1.Invoke().Value()}, func2: {_multipleCtorService2.Invoke("par2").Value()}, func3: {_multipleCtorService3.Invoke("par3","par3").Value()}");
         }
 
         [HttpGet(nameof(Filter))]

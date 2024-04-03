@@ -1,5 +1,6 @@
 
 using DIExample.Services;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -66,11 +67,17 @@ namespace DIExample
                 }
             });
             #endregion
-            #region Multiple constructors, Pass parameter to constructor
+            #region Multiple constructors, Pass parameter to constructor(compile/runtime)
             builder.Services.AddTransient<IMultipleCtorService>(provider =>
             {
-                //return ActivatorUtilities.CreateInstance<MultipleCtorService>(provider);
-                //return ActivatorUtilities.CreateInstance<MultipleCtorService>(provider, "A");
+                return ActivatorUtilities.CreateInstance<MultipleCtorService>(provider, "A");
+            });
+            builder.Services.AddKeyedTransient<IMultipleCtorService>("m1", (provider, key) =>
+            {
+                return ActivatorUtilities.CreateInstance<MultipleCtorService>(provider);
+            });
+            builder.Services.AddKeyedTransient<IMultipleCtorService>("m3", (provider, key) =>
+            {
                 return ActivatorUtilities.CreateInstance<MultipleCtorService>(provider, "A", "B");
             });
             builder.Services.AddTransient<Func<string, string, IMultipleCtorService>>(provider =>
